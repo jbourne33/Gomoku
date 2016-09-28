@@ -9,11 +9,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 
 public class Controller {
 
     @FXML
     private GridPane gridPane;
+
+    @FXML
+    private StackPane backgroundPane;
+
+    private int backgroundCount = 1;
 
     @FXML
     public void initialize() {
@@ -51,4 +57,11 @@ public class Controller {
         Platform.exit();
     }
 
+    @FXML
+    private void onMouseClickChangeBackground(){
+        if (backgroundCount == 3) backgroundCount = 1;
+        else backgroundCount++;
+        String css = "-fx-background-image: url('backgrounds/"+ backgroundCount +".jpg'); -fx-background-size: cover;";
+        backgroundPane.setStyle(css);
+    }
 }
