@@ -3,13 +3,14 @@ package gomoku;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Controller {
 
@@ -19,36 +20,43 @@ public class Controller {
     @FXML
     private StackPane backgroundPane;
 
-    private int backgroundCount = 1;
+    private static int numberOfBackgrounds = 3;
+    private List<Background> backgrounds = new ArrayList<Background>();
+    private int backgroundCount = 0;
+
+    private Gomoku game = new Gomoku();
 
     @FXML
     public void initialize() {
-        for(int y = 0; y < 15; y++)
-            for(int x = 0; x < 15; x++) {
-                ImageView image = new ImageView();
-                gridPane.add(image, x, y);
-                image.setImage(new Image("test.jpg"));
-                GridPane.setRowIndex(image, x);
-                GridPane.setColumnIndex(image, y);
-                GridPane.setHalignment(image, HPos.CENTER); // To align horizontally in the cell
-                GridPane.setValignment(image, VPos.CENTER); // To align vertically in the cell
-                image.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> System.out.println( "Node: " + image + " at " + GridPane.getRowIndex( image) + "/" + GridPane.getColumnIndex( image)));
+        gridPane.setAlignment(Pos.CENTER);
 
-            }
-
-        gridPane.setGridLinesVisible(true);
-    }
-
-    @FXML
-    private void onMouseClickGridPane(MouseEvent e) {
-        for( Node node: gridPane.getChildren()) {
-
-            if( node.getBoundsInParent().contains(e.getSceneX(),  e.getSceneY())) {
-                System.out.println( "Node: " + node + " at " + GridPane.getRowIndex( node) + "/" + GridPane.getColumnIndex( node));
-            }
-
+        for(int i = 1; i <= numberOfBackgrounds; i++) {
+            Image img = new Image("/backgrounds/" + i + ".jpg", true);
+            BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, true);
+            BackgroundImage bgImage = new BackgroundImage(img, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
+            Background bg = new Background(bgImage);
+            backgrounds.add(bg);
 
         }
+
+        setGameBoard();
+
+        //gridPane.setGridLinesVisible(true);
+    }
+
+    private void setGameBoard() {
+        for(int y = 0; y < Gomoku.BOARD_SIZE; y++)
+            for(int x = 0; x < Gomoku.BOARD_SIZE; x++) {
+                Move gamePiece = new Move(x, y);
+                gamePiece.setMinSize(32.0, 32.0);
+                gridPane.add(gamePiece, x, y);
+                GridPane.setRowIndex(gamePiece, x);
+                GridPane.setColumnIndex(gamePiece, y);
+                GridPane.setHalignment(gamePiece, HPos.CENTER); // To align horizontally in the cell
+                GridPane.setValignment(gamePiece, VPos.CENTER); // To align vertically in the cell
+                gamePiece.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> game.makeMove(GridPane.getColumnIndex(gamePiece), (GridPane.getRowIndex(gamePiece)), gamePiece));
+
+            }
 
     }
 
@@ -58,10 +66,24 @@ public class Controller {
     }
 
     @FXML
+    private void undoMove() {
+        game.removeLastMove();
+    }
+
+    @FXML
+    private  void resetGame() {
+        game = new Gomoku();
+
+        gridPane.getChildren().clear();
+
+        setGameBoard();
+    }
+
+    @FXML
     private void onMouseClickChangeBackground(){
-        if (backgroundCount == 3) backgroundCount = 1;
-        else backgroundCount++;
-        String css = "-fx-background-image: url('backgrounds/"+ backgroundCount +".jpg'); -fx-background-size: cover;";
-        backgroundPane.setStyle(css);
+        if (++backgroundCount == backgrounds.size())
+            backgroundCount = 0;
+
+        backgroundPane.setBackground(backgrounds.get(backgroundCount));
     }
 }
