@@ -20,7 +20,7 @@ public class Controller {
     @FXML
     private StackPane backgroundPane;
 
-    private static int numberOfBackgrounds = 3;
+    private static int numberOfBackgrounds = 4;
     private List<Background> backgrounds = new ArrayList<Background>();
     private int backgroundCount = 0;
 
@@ -50,11 +50,11 @@ public class Controller {
                 Move gamePiece = new Move(x, y);
                 gamePiece.setMinSize(32.0, 32.0);
                 gridPane.add(gamePiece, x, y);
-                GridPane.setRowIndex(gamePiece, x);
-                GridPane.setColumnIndex(gamePiece, y);
+                GridPane.setRowIndex(gamePiece, y);
+                GridPane.setColumnIndex(gamePiece, x);
                 GridPane.setHalignment(gamePiece, HPos.CENTER); // To align horizontally in the cell
                 GridPane.setValignment(gamePiece, VPos.CENTER); // To align vertically in the cell
-                gamePiece.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> game.makeMove(GridPane.getColumnIndex(gamePiece), (GridPane.getRowIndex(gamePiece)), gamePiece));
+                gamePiece.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> game.makeMove(gamePiece));
 
             }
 

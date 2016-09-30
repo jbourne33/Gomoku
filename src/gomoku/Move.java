@@ -1,7 +1,6 @@
 package gomoku;
 
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
 
 /**
  * Created by ben on 9/27/16.
@@ -9,6 +8,7 @@ import javafx.scene.layout.GridPane;
 public class Move extends Label {
     private int x;
     private int y;
+    private int player = -1;
 
     public Move(int x, int y) {
         super();
@@ -22,6 +22,12 @@ public class Move extends Label {
 
     public int y() {
         return this.y;
+    }
+
+    public void setPlayer(int num) { player = num; }
+
+    public int getPlayer() {
+        return this.player;
     }
 
 }
