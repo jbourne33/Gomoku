@@ -1,0 +1,15 @@
+=============
+Gomoku Deluxe
+===================================
+Authors: Jason Willmore, Ben DeCamp
+Build Date: Sept. 29, 2016
+
+Description: 
+
+=============
+Instructions:
+=============
+
+To compile: run the compile.sh script, the java classes will be located in /src/gomoku/
+
+To run: run the run.sh script, it will automatically run the Main.class file to launch the prorgam.
